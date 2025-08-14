@@ -26,6 +26,7 @@ CREATE TABLE staff (
     name VARCHAR(100) NOT NULL,
     role ENUM('Coordinator', 'Staff') NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
@@ -69,10 +70,10 @@ CREATE TABLE logsheets (
     course_id INT,
     module_id INT,
     type ENUM('Lecture', 'Lab'),
-    status VARCHAR,
-    topics_taught TEXT,           -- For Lecture
-    assignment_given TEXT,        -- For Lab
-    student_progress TEXT,        -- For Lab
+    status VARCHAR(50),
+    topics_taught TEXT,           
+    assignment_given TEXT,        
+    student_progress TEXT,        
     faculty_id INT NOT NULL,
     FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id)
         ON DELETE SET NULL ON UPDATE CASCADE,
