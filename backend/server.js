@@ -18,6 +18,11 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 
+// Module 
+const moduleRoutes = require('./routes/moduleRoutes');
+app.use('/api/modules', moduleRoutes);
+
+
 
 // Start Server
 const PORT = process.env.PORT || 5000;
