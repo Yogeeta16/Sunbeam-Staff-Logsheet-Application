@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const courseRoutes = require('./routes/courseRoutes');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,12 @@ app.get('/', (req, res) => {
 
 // Import Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/courses', courseRoutes);
+
+// Module 
+const moduleRoutes = require('./routes/moduleRoutes');
+app.use('/api/modules', moduleRoutes);
+
 
 
 // Start Server
