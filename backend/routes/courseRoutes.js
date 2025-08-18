@@ -1,13 +1,16 @@
-
 // backend/routes/courseRoutes.js
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
+const { verifyToken, isCoordinator } = require('../middleware/roleMiddleware');
 
-router.get('/', courseController.listCourses);
-router.get('/:id', courseController.getCourseById);
-router.post('/', courseController.createCourse);
-router.put('/:id', courseController.updateCourse);
-router.delete('/:id', courseController.deleteCourse);
+// Staff can view
+router.get('/', verifyToken, courseController.listCourses);
+router.get('/:id', verifyToken, courseController.getCourseById);
+
+// Only Coordinator can create, update, delete
+router.post('/', verifyToken, isCoordinator, courseController.createCourse);
+router.put('/:id', verifyToken, isCoordinator, courseController.updateCourse);
+router.delete('/:id', verifyToken, isCoordinator, courseController.deleteCourse);
 
 module.exports = router;

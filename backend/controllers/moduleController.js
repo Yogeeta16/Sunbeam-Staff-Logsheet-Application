@@ -1,5 +1,5 @@
-// backend/controllers/moduleController.js
 const Module = require('../models/Module');
+const path = require('path');
 
 exports.listModules = async (req, res) => {
     try {
@@ -28,14 +28,24 @@ exports.getModule = async (req, res) => {
 
 exports.createModule = async (req, res) => {
     try {
-        const { course_id, module_name, curriculum_file_path } = req.body;
+        // console.log("BODY:", req.body);
+        // console.log("FILE:", req.file); 
+
+        const course_id = req.body.course_id ? parseInt(req.body.course_id, 10) : null;
+        const module_name = req.body.module_name;
+        const curriculum_file_path = req.file ? req.file.path : null;
 
         if (!course_id || !module_name) {
             return res.status(400).json({ message: "course_id and module_name are required" });
         }
 
         const insertId = await Module.createModule(course_id, module_name, curriculum_file_path);
-        res.status(201).json({ message: "Module created successfully", module_id: insertId });
+
+        res.status(201).json({
+            message: "Module created successfully",
+            module_id: insertId,
+            curriculum_file: curriculum_file_path
+        });
     } catch (error) {
         console.error("Error creating module:", error);
         res.status(500).json({ message: error.sqlMessage || error.message });
@@ -45,7 +55,8 @@ exports.createModule = async (req, res) => {
 exports.updateModule = async (req, res) => {
     try {
         const { id } = req.params;
-        const { course_id, module_name, curriculum_file_path } = req.body;
+        const { course_id, module_name } = req.body;
+        const curriculum_file_path = req.file ? req.file.path : req.body.curriculum_file_path || null;
 
         const affectedRows = await Module.updateModule(id, course_id, module_name, curriculum_file_path);
         if (affectedRows === 0) {
@@ -72,4 +83,3 @@ exports.deleteModule = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
-
