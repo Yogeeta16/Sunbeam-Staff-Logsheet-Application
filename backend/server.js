@@ -5,6 +5,8 @@ require('dotenv').config();
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const moduleRoutes = require('./routes/moduleRoutes');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -17,14 +19,16 @@ app.get('/', (req, res) => {
 // Import Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
-
-// Module 
-const moduleRoutes = require('./routes/moduleRoutes');
 app.use('/api/modules', moduleRoutes);
 
+app.use('/uploads', express.static('uploads'));
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+});
 
 // Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

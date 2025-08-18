@@ -1,4 +1,3 @@
-// backend/models/Module.js
 const db = require('../config/db');
 
 exports.getAllModules = async () => {
@@ -27,7 +26,6 @@ exports.createModule = async (course_id, module_name, curriculum_file_path) => {
     `, [course_id, module_name, curriculum_file_path || null]);
     return result.insertId;
 };
-
 
 exports.updateModule = async (id, course_id, module_name, curriculum_file_path) => {
     const [result] = await db.query(`
