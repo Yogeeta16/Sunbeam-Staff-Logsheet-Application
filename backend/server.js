@@ -6,6 +6,7 @@ const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const moduleRoutes = require('./routes/moduleRoutes');
+const scheduleRoutes = require('./routes/scheduleRoutes');
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/modules', moduleRoutes);
+app.use('/api/schedules', scheduleRoutes);
 
 app.use('/uploads', express.static('uploads'));
 

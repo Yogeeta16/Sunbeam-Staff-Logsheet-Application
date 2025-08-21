@@ -59,6 +59,15 @@ CREATE TABLE schedules (
     FOREIGN KEY (faculty_id) REFERENCES staff(staff_id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+-- Create 'schedule_uploads' table
+CREATE TABLE IF NOT EXISTS schedule_uploads (
+  upload_id INT AUTO_INCREMENT PRIMARY KEY,
+  file_path VARCHAR(255) NOT NULL,
+  uploaded_by INT NOT NULL,
+  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (uploaded_by) REFERENCES staff(staff_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 -- Create 'logsheets' table
 CREATE TABLE logsheets (

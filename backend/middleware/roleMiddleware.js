@@ -24,3 +24,8 @@ exports.isCoordinator = (req, res, next) => {
     }
     next();
 };
+// Check if user is Staff
+exports.isStaff = (req, res, next) => {
+  if (req.user?.role === 'Staff') return next();
+  return res.status(403).json({ message: 'Staff only' });
+};
