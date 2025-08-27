@@ -7,7 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const moduleRoutes = require('./routes/moduleRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
-
+const logsheetRoutes = require('./routes/logsheetRoutes');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -22,7 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/schedules', scheduleRoutes);
-
+app.use('/api/logsheets', logsheetRoutes);
 app.use('/uploads', express.static('uploads'));
 
 app.use((err, req, res, next) => {
