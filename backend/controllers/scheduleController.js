@@ -15,6 +15,40 @@ const sendValidation = (req, res) => {
   return false; 
 
 };
+// Convert Excel date serial (or JS Date) → 'YYYY-MM-DD'
+function parseExcelDate(value) {
+  if (!value) return null;
+  if (value instanceof Date) {
+    return value.toISOString().split('T')[0];
+  }
+  if (typeof value === 'number') {
+    const dateObj = new Date(Math.round((value - 25569) * 86400 * 1000)); 
+    return dateObj.toISOString().split('T')[0];
+  }
+  if (typeof value === 'string') {
+    return value.split('T')[0];
+  }
+  return null;
+}
+
+// Convert Excel time (fraction of day or Date) → 'HH:MM:SS'
+function parseExcelTime(value) {
+  if (!value) return null;
+  if (value instanceof Date) {
+    return value.toTimeString().split(' ')[0];
+  }
+  if (typeof value === 'number') {
+    const seconds = Math.round(value * 24 * 60 * 60);
+    const hh = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mm = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const ss = String(seconds % 60).padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  }
+  if (typeof value === 'string') {
+    return value.length === 5 ? `${value}:00` : value; // e.g. '12:00' → '12:00:00'
+  }
+  return null;
+}
 
 exports.addSchedule = async (req, res) => {
   if (sendValidation(req, res)) return;  
@@ -105,9 +139,9 @@ exports.uploadScheduleExcel = async (req, res) => {
       schedules.push([
         course_id,
         module_id,
-        date,
-        start_time,
-        end_time,
+      parseExcelDate(date),       
+    parseExcelTime(start_time),  
+    parseExcelTime(end_time), 
         type,
         group,
         venue,
