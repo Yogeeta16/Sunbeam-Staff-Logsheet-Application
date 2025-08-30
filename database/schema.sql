@@ -79,7 +79,7 @@ CREATE TABLE logsheets (
     course_id INT,
     module_id INT,
     type ENUM('Lecture', 'Lab'),
-    status VARCHAR(50),
+    status ENUM('Approved', 'Rejected', 'Pending'),
     topics_taught TEXT,           
     assignment_given TEXT,        
     student_progress TEXT,        
