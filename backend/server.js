@@ -6,6 +6,7 @@ const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const moduleRoutes = require('./routes/moduleRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const logsheetRoutes = require('./routes/logsheetRoutes');
 const app = express();
@@ -23,6 +24,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/logsheets', logsheetRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+
 app.use('/uploads', express.static('uploads'));
 
 app.use((err, req, res, next) => {
