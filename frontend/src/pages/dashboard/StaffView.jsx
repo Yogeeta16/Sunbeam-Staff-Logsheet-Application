@@ -6,7 +6,7 @@ import "../.././components/styles/components.css";
 import { StatusBadge } from "./StatusBadge";
 
 function StaffView({ data }) {
-  console.log (data);
+  console.log (data + 'staff');
     
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
