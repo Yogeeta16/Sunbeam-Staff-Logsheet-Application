@@ -1,7 +1,20 @@
-export default function App() {
+// App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/dashboard/Dashboard";
+import StaffView from "./pages/dashboard/StaffView";
+import CoordinatorView from "./pages/dashboard/CoordinatorView";
+
+function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">🚀 React Frontend Setup Ready!</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="staff" element={<StaffView />} />
+          <Route path="coordinator" element={<CoordinatorView />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+export default App;
