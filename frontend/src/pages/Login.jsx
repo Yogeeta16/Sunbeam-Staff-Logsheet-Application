@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../app.css";
+import "../App.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ function Login() {
       // Save token and role here
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
+      localStorage.setItem("id", res.data.id);
 
       navigate("/dashboard");
     } catch (error) {
