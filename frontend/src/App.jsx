@@ -1,7 +1,12 @@
-export default function App() {
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./components/Routes";
+
+function App() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">🚀 React Frontend Setup Ready!</h1>
-    </div>
+    <Router>
+      <AppRoutes />
+    </Router>
   );
 }
+
+export default App;
