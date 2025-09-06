@@ -1,14 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
-import { cn } from "../../utils/cn";
+import {
+  BookOpen,
+  Users,
+  AlertCircle,
+  Clock,
+  CheckCircle,
+  TrendingUp,
+} from "lucide-react";
+
+const iconsMap = {
+  BookOpen,
+  Users,
+  AlertCircle,
+  Clock,
+  CheckCircle,
+  TrendingUp,
+};
+
 export function StatsCard({
   title,
   value,
   description,
-  icon: Icon,
+  icon,
   className,
 }) {
+  const Icon = iconsMap[icon];
+
   return (
-    <Card className={cn("stats-card", className)}>
+    <Card className={`stats-card ${className || ""}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -20,7 +39,7 @@ export function StatsCard({
         {description && (
           <p className="text-xs text-muted-foreground mt-1">{description}</p>
         )}
-       
+      
       </CardContent>
     </Card>
   );
