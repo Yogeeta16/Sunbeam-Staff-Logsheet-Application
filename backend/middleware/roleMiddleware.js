@@ -1,4 +1,3 @@
-// roleMiddleware.js
 const jwt = require('jsonwebtoken');
 
 exports.verifyToken = (req, res, next) => {
@@ -10,7 +9,7 @@ exports.verifyToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        req.user = decoded; // { id, role }
         next();
     } catch (err) {
         res.status(400).json({ message: 'Invalid Token' });
