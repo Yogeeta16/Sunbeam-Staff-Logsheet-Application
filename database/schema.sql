@@ -11,14 +11,10 @@ USE logsheet_app;
 DROP TABLE IF EXISTS logsheets;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS modules;
+DROP TABLE IF EXISTS schedule_uploads
 DROP TABLE IF EXISTS staff;
 DROP TABLE IF EXISTS courses;
 
--- Create 'courses' table
-CREATE TABLE courses (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_name VARCHAR(50) NOT NULL
-);
 
 -- Create 'staff' table
 CREATE TABLE staff (
@@ -27,9 +23,23 @@ CREATE TABLE staff (
     role ENUM('Coordinator', 'Staff') NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    department VARCHAR(100),
+    office_location VARCHAR(100),
+    joined_date DATE
 );
-
+-- Create 'courses' table
+CREATE TABLE courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(50) NOT NULL,
+    coordinator_id INT NOT NULL,  -- link to staff table
+    modules_count INT DEFAULT 0,
+    status ENUM('Active', 'Inactive') DEFAULT 'Active',
+    FOREIGN KEY (coordinator_id) REFERENCES staff(staff_id)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+);
 -- Create 'modules' table
 CREATE TABLE modules (
     module_id INT AUTO_INCREMENT PRIMARY KEY,
