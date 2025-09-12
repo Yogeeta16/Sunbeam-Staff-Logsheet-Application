@@ -30,7 +30,6 @@ const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isViewMode, setIsViewMode] = useState(false);
 
-  // ✅ Fix: normalize role
   const isCoordinator = user?.role?.toLowerCase() === 'coordinator';
 
   // Fetch all courses
