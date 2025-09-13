@@ -106,18 +106,18 @@ exports.uploadScheduleExcel = async (req, res) => {
 
     const uploadedBy = req.user.id;
 
-    // ✅ 1. Save file info in schedule_uploads
+    //  1. Save file info in schedule_uploads
     await db.query(
       "INSERT INTO schedule_uploads (file_path, uploaded_by) VALUES (?, ?)",
       [req.file.path, uploadedBy]
     );
 
-    // ✅ 2. Read Excel
+    //  2. Read Excel
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(req.file.path);
     const sheet = workbook.worksheets[0]; 
 
-    // ✅ 3. Loop through rows (skip header row)
+    //  3. Loop through rows (skip header row)
     const schedules = [];
     sheet.eachRow((row, rowNumber) => {
       if (rowNumber === 1) return; 
@@ -165,6 +165,41 @@ exports.uploadScheduleExcel = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Upload failed", details: err.message });
+  }
+};
+exports.exportSchedulesByStaff = async (req, res) => {
+  try {
+    const staffId = req.params.staffId;
+    const schedules = await Schedule.getByStaffId(staffId);
+
+    if (!schedules.length) {
+      return res.status(404).json({ message: "No schedules found for this staff" });
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Schedules");
+
+    worksheet.columns = [
+      { header: "Schedule ID", key: "schedule_id", width: 15 },
+      { header: "Course ID", key: "course_id", width: 10 },
+      { header: "Module ID", key: "module_id", width: 10 },
+      { header: "Date", key: "date", width: 15 },
+      { header: "Start Time", key: "start_time", width: 12 },
+      { header: "End Time", key: "end_time", width: 12 },
+      { header: "Type", key: "type", width: 10 },
+      { header: "Group", key: "group", width: 10 },
+      { header: "Venue", key: "venue", width: 15 },
+    ];
+
+    schedules.forEach(sch => worksheet.addRow(sch));
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename=schedules_staff_${staffId}.xlsx`);
+    res.send(buffer);
+  } catch (err) {
+    console.error("Error exporting staff schedules:", err);
+    res.status(500).json({ message: "Error exporting schedules", error: err.message });
   }
 };
 
@@ -234,5 +269,37 @@ exports.searchSchedule = async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+exports.getSchedulesByStaff = async (req, res) => {
+  try {
+    const staffId = req.params.staffId;
+
+    const rows = await Schedule.getByStaffId(staffId);
+
+    if (!rows.length) {
+      return res.status(404).json({ message: "No schedules found for this staff" });
+    }
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching schedules by staff:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getAvailableSchedulesForStaff = async (req, res) => {
+  try {
+    const staffId = req.params.staffId;
+    const rows = await Schedule.getAvailableForStaff(staffId);
+
+    if (!rows.length) {
+      return res.status(404).json({ message: "No available schedules" });
+    }
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching available schedules:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

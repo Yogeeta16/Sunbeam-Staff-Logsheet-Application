@@ -23,12 +23,15 @@ exports.getLogById = async (req, res) => {
 
 // Create new log (staff only)
 exports.createLog = async (req, res) => {
-    try {
-        const logId = await Logsheet.create({ ...req.body, faculty_id: req.user.id });
-        res.status(201).json({ message: 'Log created successfully', logId });
-    } catch (err) {
-        res.status(500).json({ message: 'Error creating log', error: err.message });
+  try {
+    const logId = await Logsheet.create({ ...req.body, faculty_id: req.user.id });
+    res.status(201).json({ message: 'Log created successfully', logId });
+  } catch (err) {
+    if (err.message.includes("already exists")) {
+      return res.status(400).json({ message: err.message });
     }
+    res.status(500).json({ message: 'Error creating log', error: err.message });
+  }
 };
 
 // Update log (staff only if Pending)

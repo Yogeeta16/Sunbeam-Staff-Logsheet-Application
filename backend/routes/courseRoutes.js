@@ -12,5 +12,6 @@ router.get('/:id', verifyToken, courseController.getCourseById);
 router.post('/', verifyToken, isCoordinator, courseController.createCourse);
 router.put('/:id', verifyToken, isCoordinator, courseController.updateCourse);
 router.delete('/:id', verifyToken, isCoordinator, courseController.deleteCourse);
+router.get("/coordinator/courses", verifyToken, isCoordinator, courseController.getCoordinatorCourses);
 
 module.exports = router;

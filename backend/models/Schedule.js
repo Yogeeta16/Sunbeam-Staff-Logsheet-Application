@@ -95,3 +95,40 @@ exports.search = async ({ faculty_id, course_id, module_id, date }) => {
   );
   return rows;
 };
+
+exports.getByStaffId = async (staffId) => {
+  const [rows] = await db.query(
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+            c.course_id, c.course_name,
+            m.module_id, m.module_name,
+            st.staff_id AS faculty_id, st.name AS faculty_name
+     FROM schedules s
+     JOIN courses c ON c.course_id = s.course_id
+     JOIN modules m ON m.module_id = s.module_id
+     JOIN staff st ON st.staff_id = s.faculty_id
+     WHERE s.faculty_id = ?
+     ORDER BY s.date DESC, s.start_time DESC`,
+    [staffId]
+  );
+  return rows;
+};
+// gets the schedule for staff for which logsheet not created
+exports.getAvailableForStaff = async (staffId) => {
+  const [rows] = await db.query(
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+            c.course_id, c.course_name,
+            m.module_id, m.module_name,
+            st.staff_id AS faculty_id, st.name AS faculty_name
+     FROM schedules s
+     JOIN courses c ON c.course_id = s.course_id
+     JOIN modules m ON m.module_id = s.module_id
+     JOIN staff st ON st.staff_id = s.faculty_id
+     WHERE s.faculty_id = ?
+       AND NOT EXISTS (
+         SELECT 1 FROM logsheets l WHERE l.schedule_id = s.schedule_id
+       )
+     ORDER BY s.date DESC, s.start_time DESC`,
+    [staffId]
+  );
+  return rows;
+};

@@ -10,7 +10,7 @@ router.post('/login', authController.login);
 
 // Protected routes
 // Only Coordinators can view ALL users
-router.get('/users', verifyToken, isCoordinator, authController.getAllUsers);
+router.get('/users', verifyToken, authController.getAllUsers);
 
 // All logged-in users can view their own profile OR Coordinators can view any
 router.get('/users/:id', verifyToken, authController.getUserById);
