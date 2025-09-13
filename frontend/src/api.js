@@ -101,3 +101,68 @@ export const deleteCourse = async (id) => {
     throw error;
   }
 };
+
+// ---------------- Modules ----------------
+export const getModules = async () => {
+  try {
+    const res = await api.get("/modules");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching modules:", error.response?.data || error.message);
+    return [];
+  }
+};
+
+export const getModuleById = async (id) => {
+  try {
+    const res = await api.get(`/modules/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error(`Error fetching module ID ${id}:`, error.response?.data || error.message);
+    return null;
+  }
+};
+
+export const createModule = async (moduleData, file) => {
+  try {
+    const formData = new FormData();
+    formData.append("course_id", moduleData.course_id);
+    formData.append("module_name", moduleData.module_name);
+    if (file) formData.append("curriculum_file", file);
+
+    const res = await api.post("/modules", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error creating module:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateModule = async (id, moduleData, file) => {
+  try {
+    const formData = new FormData();
+    formData.append("course_id", moduleData.course_id);
+    formData.append("module_name", moduleData.module_name);
+    if (file) formData.append("curriculum_file", file);
+
+    const res = await api.put(`/modules/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(`Error updating module ID ${id}:`, error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const deleteModule = async (id) => {
+  try {
+    const res = await api.delete(`/modules/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error(`Error deleting module ID ${id}:`, error.response?.data || error.message);
+    throw error;
+  }
+};

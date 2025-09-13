@@ -9,7 +9,9 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
+import Modules from "./pages/Modules";
 import NotFound from "./pages/NotFound";
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -25,7 +27,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
-              
+              <Route path="/modules" element={<ProtectedRoute><Modules /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

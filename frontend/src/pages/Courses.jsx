@@ -30,6 +30,7 @@ const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isViewMode, setIsViewMode] = useState(false);
 
+  //Fix: normalize role
   const isCoordinator = user?.role?.toLowerCase() === 'coordinator';
 
   // Fetch all courses
@@ -37,6 +38,7 @@ const Courses = () => {
     const fetchData = async () => {
       try {
         const data = await getCourses();
+         console.log('data', data);
         setCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error.response?.data || error.message);
@@ -49,7 +51,7 @@ const Courses = () => {
   const filteredCourses = courses.filter(
     (course) =>
       course.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.course_coordinator_name.toLowerCase().includes(searchTerm.toLowerCase())
+      course.coordinator_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (course) => {
@@ -186,7 +188,7 @@ const Courses = () => {
                 {filteredCourses.map((course) => (
                   <TableRow key={course.course_id}>
                     <TableCell className="font-medium">{course.course_name}</TableCell>
-                    <TableCell>{course.course_coordinator_name}</TableCell>
+                    <TableCell>{course.coordinator_name}</TableCell>
                     <TableCell>{course.modules_count}</TableCell>
                     <TableCell>
                       <StatusBadge status={course.status.toLowerCase()} />
