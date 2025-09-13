@@ -18,7 +18,7 @@ api.interceptors.request.use((config) => {
 });
 
 // ---------------- Users ----------------
-// ✅ Get all coordinators
+//  Get all coordinators
 export const getCoordinators = async () => {
   try {
     const res = await api.get("/auth/users");

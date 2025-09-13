@@ -61,13 +61,31 @@ const Course = {
             [course_id]
         );
     },
-      // ✅ Decrement modules_count
+      //  Decrement modules_count
     decrementModules: async (course_id) => {
         await db.query(
             'UPDATE courses SET modules_count = GREATEST(modules_count - 1, 0) WHERE course_id = ?',
             [course_id]
         );
-    }
+    },
+    getCoursesByCoordinatorId: async (coordinatorId) => {
+    const [rows] = await db.query(
+      `SELECT 
+         c.course_id,
+         c.course_name,
+         c.modules_count,
+         c.status,
+         c.coordinator_id,
+         s.name AS coordinator_name
+       FROM courses c
+       JOIN staff s ON c.coordinator_id = s.staff_id
+       WHERE c.coordinator_id = ?`,
+      [coordinatorId]
+    );
+    return rows;
+  }
+
 };
+
 
 module.exports = Course;

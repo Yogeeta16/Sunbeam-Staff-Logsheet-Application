@@ -47,10 +47,13 @@ router.get('/uploads/list', verifyToken, isCoordinator, scheduleController.getSc
 router.post('/', verifyToken, isCoordinator, validateSchedule, scheduleController.addSchedule);
 router.put('/:id', verifyToken, isCoordinator,validateSchedule, scheduleController.updateSchedule);
 router.delete('/:id', verifyToken, isCoordinator, scheduleController.removeSchedule);
+router.get('/', verifyToken, isCoordinator,scheduleController.getAllSchedule);
 
 // Staff can view
-router.get('/', verifyToken, scheduleController.getAllSchedule);
+router.get('/export/staff/:staffId', verifyToken, isStaff, scheduleController.exportSchedulesByStaff);
+router.get('/staff/:staffId', verifyToken, isStaff,scheduleController.getSchedulesByStaff);
 router.get('/search', verifyToken, scheduleController.searchSchedule);
 router.get('/:id', verifyToken, scheduleController.getOneSchedule);
+router.get('/staff/:staffId/available',verifyToken, isStaff, scheduleController.getAvailableSchedulesForStaff);
 
 module.exports = router;

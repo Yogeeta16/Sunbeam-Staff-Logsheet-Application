@@ -1,6 +1,6 @@
 const Course = require('../models/Course');
 
-// ✅ List all courses
+//  List all courses
 exports.listCourses = async (req, res) => {
     try {
         const courses = await Course.getAll();
@@ -10,7 +10,7 @@ exports.listCourses = async (req, res) => {
     }
 };
 
-// ✅ Get a single course by ID
+//  Get a single course by ID
 exports.getCourseById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -23,7 +23,7 @@ exports.getCourseById = async (req, res) => {
     }
 };
 
-// ✅ Create new course
+//  Create new course
 exports.createCourse = async (req, res) => {
     try {
         const { course_name, coordinator_id, status } = req.body;
@@ -39,7 +39,7 @@ exports.createCourse = async (req, res) => {
     }
 };
 
-// ✅ Update course info
+//  Update course info
 exports.updateCourse = async (req, res) => {
     try {
         const { id } = req.params;
@@ -54,7 +54,7 @@ exports.updateCourse = async (req, res) => {
     }
 };
 
-// ✅ Delete course
+//  Delete course
 exports.deleteCourse = async (req, res) => {
     try {
         const { id } = req.params;
@@ -65,4 +65,16 @@ exports.deleteCourse = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+};
+
+exports.getCoordinatorCourses = async (req, res) => {
+  try {
+    const coordinatorId = req.user.id; // from JWT
+    const courses = await Course.getCoursesByCoordinatorId(coordinatorId);
+
+    res.json(courses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error fetching courses" });
+  }
 };
