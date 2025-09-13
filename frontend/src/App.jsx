@@ -8,7 +8,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-
+import Courses from "./pages/Courses";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -24,7 +24,8 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            
+              <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
