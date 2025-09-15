@@ -11,6 +11,11 @@ export const Layout = ({ children }) => {
         <main className="flex-1 overflow-auto p-6">
           {children}
         </main>
+         {/* <footer className="h-16 bg-card border-t border-border flex items-center justify-center px-6">
+        <p className="text-sm text-muted-foreground">
+          © {new Date().getFullYear()} Staff Logsheet App. All rights reserved.
+        </p>
+      </footer> */}
       </div>
     </div>
   );
