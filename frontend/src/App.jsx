@@ -10,8 +10,10 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import Logsheets from "./pages/Logsheets";
+import Staff from "./pages/Staff";
 import Modules from "./pages/Modules";
 import Schedules from "./pages/Schedules";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import MyUploads from "./pages/MyUploads";
 
@@ -31,9 +33,11 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
               <Route path="/modules" element={<ProtectedRoute><Modules /></ProtectedRoute>} />
+              <Route path="/staff" element={<ProtectedRoute requiredRole="coordinator"><Staff /></ProtectedRoute>} />
               <Route path="/logsheets" element={<ProtectedRoute><Logsheets /></ProtectedRoute>} />
               <Route path="/schedules" element={<ProtectedRoute><Schedules /></ProtectedRoute>} />
               <Route path="/myuploads" element={<ProtectedRoute requiredRole="coordinator"><MyUploads /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
