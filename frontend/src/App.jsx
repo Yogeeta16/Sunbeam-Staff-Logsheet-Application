@@ -10,7 +10,9 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import Modules from "./pages/Modules";
+import Schedules from "./pages/Schedules";
 import NotFound from "./pages/NotFound";
+import MyUploads from "./pages/MyUploads";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/courses" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
               <Route path="/modules" element={<ProtectedRoute><Modules /></ProtectedRoute>} />
+              <Route path="/schedules" element={<ProtectedRoute><Schedules /></ProtectedRoute>} />
+              <Route path="/myuploads" element={<ProtectedRoute requiredRole="coordinator"><MyUploads /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
