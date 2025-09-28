@@ -44,7 +44,6 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
       <Card className="w-full max-w-md shadow-lg">
         <AuthCardHeader
-          icon={<GraduationCap className="w-6 h-6 text-primary-foreground" />}
           title="Staff Logsheet System"
           description="Sign in to manage your schedules and logsheets"
         />

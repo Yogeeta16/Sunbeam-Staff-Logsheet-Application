@@ -47,8 +47,12 @@ const navItems = user?.role?.toLowerCase() === 'coordinator' ? coordinatorNavIte
       <div className="p-6 border-b border-border">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-primary-foreground" />
-          </div>
+         <img
+        src="/sunbeam.png"
+        alt="Sunbeam Logo"
+        className="w-12 h-12 "
+      />
+              </div>
           <div>
             <h1 className="font-bold text-lg">Staff Logsheet</h1>
             <p className="text-xs text-muted-foreground">Management System</p>
