@@ -107,8 +107,8 @@ export const ScheduleForm = ({
       {/* Group / Venue */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label>Group</Label>
-          <Input type="text" name="group" value={formData.group} onChange={handleChange} placeholder="Optional" disabled={viewOnly} />
+          <Label>classgroup</Label>
+          <Input type="text" name="classgroup" value={formData.classgroup} onChange={handleChange} placeholder="Optional" disabled={viewOnly} />
         </div>
         <div>
           <Label>Venue</Label>

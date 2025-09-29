@@ -2,11 +2,11 @@
 const db = require('../config/db');
 
 exports.create = async (payload) => {
-  const { course_id, module_id, date, start_time, end_time, type, group, venue, faculty_id } = payload;
+  const { course_id, module_id, date, start_time, end_time, type, classgroup, venue, faculty_id } = payload;
   const [result] = await db.query(
-    `INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, \`group\`, venue, faculty_id)
+    `INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, \`classgroup\`, venue, faculty_id)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [course_id, module_id, date, start_time, end_time, type, group || null, venue || null, faculty_id]
+    [course_id, module_id, date, start_time, end_time, type, classgroup || null, venue || null, faculty_id]
   );
   return result.insertId;
 };
@@ -14,10 +14,10 @@ exports.create = async (payload) => {
 exports.bulkInsert = async (rows) => {
   if (!rows.length) return 0;
   const values = rows.map(r => [
-    r.course_id, r.module_id, r.date, r.start_time, r.end_time, r.type, r.group || null, r.venue || null, r.faculty_id
+    r.course_id, r.module_id, r.date, r.start_time, r.end_time, r.type, r.classgroup || null, r.venue || null, r.faculty_id
   ]);
   const [result] = await db.query(
-    `INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, \`group\`, venue, faculty_id)
+    `INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, \`classgroup\`, venue, faculty_id)
      VALUES ?`,
     [values]
   );
@@ -26,7 +26,7 @@ exports.bulkInsert = async (rows) => {
 
 exports.getAll = async () => {
   const [rows] = await db.query(
-    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`classgroup\`, s.venue,
             c.course_id, c.course_name,
             m.module_id, m.module_name,
             st.staff_id AS faculty_id, st.name AS faculty_name
@@ -41,7 +41,7 @@ exports.getAll = async () => {
 
 exports.getById = async (id) => {
   const [rows] = await db.query(
-    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`classgroup\`, s.venue,
             c.course_id, c.course_name,
             m.module_id, m.module_name,
             st.staff_id AS faculty_id, st.name AS faculty_name
@@ -56,12 +56,12 @@ exports.getById = async (id) => {
 };
 
 exports.update = async (id, payload) => {
-  const { course_id, module_id, date, start_time, end_time, type, group, venue, faculty_id } = payload;
+  const { course_id, module_id, date, start_time, end_time, type, classgroup, venue, faculty_id } = payload;
   const [result] = await db.query(
     `UPDATE schedules
-     SET course_id=?, module_id=?, date=?, start_time=?, end_time=?, type=?, \`group\`=?, venue=?, faculty_id=?
+     SET course_id=?, module_id=?, date=?, start_time=?, end_time=?, type=?, \`classgroup\`=?, venue=?, faculty_id=?
      WHERE schedule_id=?`,
-    [course_id, module_id, date, start_time, end_time, type, group || null, venue || null, faculty_id, id]
+    [course_id, module_id, date, start_time, end_time, type, classgroup || null, venue || null, faculty_id, id]
   );
   return result.affectedRows;
 };
@@ -81,7 +81,7 @@ exports.search = async ({ faculty_id, course_id, module_id, date }) => {
 
   const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
   const [rows] = await db.query(
-    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`classgroup\`, s.venue,
             c.course_id, c.course_name,
             m.module_id, m.module_name,
             st.staff_id AS faculty_id, st.name AS faculty_name
@@ -98,7 +98,7 @@ exports.search = async ({ faculty_id, course_id, module_id, date }) => {
 
 exports.getByStaffId = async (staffId) => {
   const [rows] = await db.query(
-    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`classgroup\`, s.venue,
             c.course_id, c.course_name,
             m.module_id, m.module_name,
             st.staff_id AS faculty_id, st.name AS faculty_name
@@ -115,7 +115,7 @@ exports.getByStaffId = async (staffId) => {
 // gets the schedule for staff for which logsheet not created
 exports.getAvailableForStaff = async (staffId) => {
   const [rows] = await db.query(
-    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`group\`, s.venue,
+    `SELECT s.schedule_id, s.date, s.start_time, s.end_time, s.type, s.\`classgroup\`, s.venue,
             c.course_id, c.course_name,
             m.module_id, m.module_name,
             st.staff_id AS faculty_id, st.name AS faculty_name

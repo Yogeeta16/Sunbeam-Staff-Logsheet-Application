@@ -80,7 +80,7 @@ exports.exportSchedules = async (req, res) => {
       { header: "Start Time", key: "start_time", width: 12 },
       { header: "End Time", key: "end_time", width: 12 },
       { header: "Type", key: "type", width: 10 },
-      { header: "Group", key: "group", width: 10 },
+      { header: "Classgroup", key: "classgroup", width: 10 },
       { header: "Venue", key: "venue", width: 15 },
       { header: "Faculty ID", key: "faculty_id", width: 12 },
     ];
@@ -129,7 +129,7 @@ exports.uploadScheduleExcel = async (req, res) => {
         start_time,
         end_time,
         type,
-        group,
+        classgroup,
         venue,
         faculty_id
       ] = row.values.slice(1); 
@@ -143,7 +143,7 @@ exports.uploadScheduleExcel = async (req, res) => {
     parseExcelTime(start_time),  
     parseExcelTime(end_time), 
         type,
-        group,
+        classgroup,
         venue,
         faculty_id
       ]);
@@ -152,7 +152,7 @@ exports.uploadScheduleExcel = async (req, res) => {
     if (schedules.length > 0) {
       await db.query(
         `INSERT INTO schedules 
-        (course_id, module_id, date, start_time, end_time, type, \`group\`, venue, faculty_id) 
+        (course_id, module_id, date, start_time, end_time, type, \`classgroup\`, venue, faculty_id) 
         VALUES ?`,
         [schedules]
       );
@@ -187,7 +187,7 @@ exports.exportSchedulesByStaff = async (req, res) => {
       { header: "Start Time", key: "start_time", width: 12 },
       { header: "End Time", key: "end_time", width: 12 },
       { header: "Type", key: "type", width: 10 },
-      { header: "Group", key: "group", width: 10 },
+      { header: "Classgroup", key: "classgroup", width: 10 },
       { header: "Venue", key: "venue", width: 15 },
     ];
 
