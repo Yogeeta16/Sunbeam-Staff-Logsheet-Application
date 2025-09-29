@@ -14,7 +14,7 @@ export function SchedulesModal({ isOpen, onClose, schedule, refreshSchedules, vi
   const [modules, setModules] = useState([]);
   const [availableModules, setAvailableModules] = useState([]);
   const [formData, setFormData] = useState({
-    course_id: "", module_id: "", faculty_id: "", date: "", start_time: "", end_time: "", type: "Lecture", group: "", venue: ""
+    course_id: "", module_id: "", faculty_id: "", date: "", start_time: "", end_time: "", type: "Lecture", classgroup: "", venue: ""
   });
   const [loading, setLoading] = useState(false);
 
@@ -44,11 +44,11 @@ export function SchedulesModal({ isOpen, onClose, schedule, refreshSchedules, vi
         start_time: schedule.start_time || "",
         end_time: schedule.end_time || "",
         type: schedule.type || "Lecture",
-        group: schedule.group || "",
+        classgroup: schedule.classgroup || "",
         venue: schedule.venue || "",
       });
     } else {
-      setFormData({ course_id: "", module_id: "", faculty_id: "", date: "", start_time: "", end_time: "", type: "Lecture", group: "", venue: "" });
+      setFormData({ course_id: "", module_id: "", faculty_id: "", date: "", start_time: "", end_time: "", type: "Lecture", classgroup: "", venue: "" });
     }
   }, [schedule]);
 

@@ -78,7 +78,7 @@ VALUES
 -- ============================
 -- 5. Insert schedules
 -- ============================
-INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, `group`, venue, faculty_id)
+INSERT INTO schedules (course_id, module_id, date, start_time, end_time, type, classgroup, venue, faculty_id)
 VALUES
 (1, 1, '2025-09-12', '09:00:00', '11:00:00', 'Lecture', 'A', 'Room 101', 1),
 (1, 2, '2025-09-13', '11:00:00', '13:00:00', 'Lab', 'B', 'Lab 202', 3),

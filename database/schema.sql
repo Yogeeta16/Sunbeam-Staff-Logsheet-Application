@@ -59,7 +59,7 @@ CREATE TABLE schedules (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     type ENUM('Lecture', 'Lab') NOT NULL,
-    `group` VARCHAR(20),
+    classgroup VARCHAR(20),
     venue VARCHAR(100),
     faculty_id INT NOT NULL,
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
