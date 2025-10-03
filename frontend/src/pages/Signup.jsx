@@ -33,7 +33,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/signup", formData);
+      const res = await axios.post("https://sunbeam-staff-logsheet-application-backend-production.up.railway.app/api/auth/signup", formData);
       toast({
         title: "Account created!",
         description: res.data.message || "You can now log in.",

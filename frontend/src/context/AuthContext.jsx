@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", {
+      const res = await axios.post("https://sunbeam-staff-logsheet-application-backend-production.up.railway.app/api/auth/login", {
         email,
         password,
       });
