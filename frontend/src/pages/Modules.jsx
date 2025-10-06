@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../co
 import { ModulesHeader } from "../components/modules/ModulesHeader";
 import { ModulesTable } from "../components/modules/ModulesTable";
 import { ModulesModal } from "../components/modals/ModulesModal";
-import { getModules, deleteModule } from "../api/modules";
+import { getModules, createModule, updateModule, deleteModule } from "../api/modules";
 import { getCourses } from "../api/courses";
 import { downloadOption } from "../api/utils";
+
 const Modules = () => {
   const { user } = useAuth();
   const isCoordinator = user?.role.toLowerCase() === "coordinator";
@@ -16,12 +17,15 @@ const Modules = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // Fetch all modules
   const fetchModules = async () => {
     const data = await getModules();
     setModules(data);
   };
 
+  // Fetch all courses
   const fetchCourses = async () => {
     const data = await getCourses();
     setCourses(data);
@@ -32,6 +36,7 @@ const Modules = () => {
     fetchCourses();
   }, []);
 
+  // Filter modules based on search term
   const filteredModules = modules.filter(
     (m) =>
       m.module_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,13 +55,32 @@ const Modules = () => {
 
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this module?")) return;
-    await deleteModule(id);
-    setModules((prev) => prev.filter((m) => m.module_id !== id));
+    try {
+      await deleteModule(id);
+      setModules((prev) => prev.filter((m) => m.module_id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
-  const handleSave = async (moduleData, uploadedFile) => {
-    await fetchModules(); // Refetch after save
-    setIsModalOpen(false);
+  // Save module (create or update)
+  const handleSave = async (formData) => {
+    setLoading(true);
+    try {
+      if (selectedModule) {
+        // Update existing module
+        await updateModule(selectedModule.module_id, formData);
+      } else {
+        // Create new module
+        await createModule(formData);
+      }
+      await fetchModules(); // Refresh the list
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Save failed:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,6 +116,7 @@ const Modules = () => {
         module={selectedModule}
         onSave={handleSave}
         courses={courses}
+        loading={loading}
       />
     </div>
   );
