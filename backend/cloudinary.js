@@ -8,13 +8,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configure Storage for Multer
-const storage = new CloudinaryStorage({
+// Multer Storage for Modules
+const moduleStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'uploads', // folder in Cloudinary
-    allowed_formats: ['jpg', 'png', 'pdf', 'docx','xlsx', 'xls'], // allowed file types
+    folder: 'modules',
+    allowed_formats: ['pdf', 'docx', 'pptx', 'jpg', 'png'],
+    resource_type: 'raw', // for documents
   },
 });
 
-module.exports = { cloudinary, storage };
+// Multer Storage for Schedules
+const scheduleStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'schedules',
+    allowed_formats: ['xlsx', 'xls'],
+    resource_type: 'raw', // for Excel
+  },
+});
+
+module.exports = { cloudinary, moduleStorage, scheduleStorage };

@@ -3,8 +3,7 @@ const router = express.Router();
 const moduleController = require('../controllers/moduleController');
 const multer = require('multer');
 const { verifyToken, isCoordinator } = require('../middleware/roleMiddleware');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { cloudinary } = require('../cloudinary'); // Make sure cloudinary.js is configured
+const { moduleStorage } = require('../cloudinary'); // Cloudinary storage for modules
 
 /* ======= OLD LOCAL DISK STORAGE (Commented Out) =======
 // const path = require('path');
@@ -20,22 +19,13 @@ const { cloudinary } = require('../cloudinary'); // Make sure cloudinary.js is c
 ======================================================== */
 
 // ======= NEW CLOUDINARY STORAGE =======
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'modules', // Cloudinary folder
-        allowed_formats: ['pdf', 'docx', 'pptx', 'jpg', 'png'], // allowed file types
-    },
-});
+const upload = multer({ storage: moduleStorage });
 
-const upload = multer({ storage });
-
-// ======= ROUTES =======
 // Staff can view
 router.get('/', verifyToken, moduleController.listModules);
 router.get('/:id', verifyToken, moduleController.getModule);
 
-// Only Coordinator can create, update, delete
+// Coordinator can create, update, delete
 router.post('/', verifyToken, isCoordinator, upload.single('curriculum_file'), moduleController.createModule);
 router.put('/:id', verifyToken, isCoordinator, upload.single('curriculum_file'), moduleController.updateModule);
 router.delete('/:id', verifyToken, isCoordinator, moduleController.deleteModule);

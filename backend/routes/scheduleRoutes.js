@@ -4,8 +4,7 @@ const { body } = require('express-validator');
 const multer = require('multer');
 const scheduleController = require('../controllers/scheduleController');
 const { verifyToken, isCoordinator, isStaff } = require('../middleware/roleMiddleware');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { cloudinary } = require('../cloudinary'); // make sure cloudinary.js is configured
+const { scheduleStorage } = require('../cloudinary'); // Cloudinary storage for schedules
 
 /* ======= OLD LOCAL STORAGE (Commented Out) =======
 const path = require('path');
@@ -31,17 +30,9 @@ const upload = multer({
 }); */
 
 // ======= CLOUDINARY STORAGE =======
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'schedules',
-    allowed_formats: ['xlsx', 'xls'],
-  },
-});
+const upload = multer({ storage: scheduleStorage });
 
-const upload = multer({ storage });
-
-// ======= Validation =======
+// Validation for schedule creation/updating
 const validateSchedule = [
   body('course_id').isInt().withMessage('course_id required'),
   body('module_id').isInt().withMessage('module_id required'),
@@ -52,8 +43,7 @@ const validateSchedule = [
   body('faculty_id').isInt().withMessage('faculty_id required')
 ];
 
-// ======= ROUTES =======
-// Coordinator actions
+// ===== Coordinator Routes =====
 router.get('/export', verifyToken, isCoordinator, scheduleController.exportSchedules);
 router.post('/upload', verifyToken, isCoordinator, upload.single('file'), scheduleController.uploadScheduleExcel);
 router.get('/uploads/list', verifyToken, isCoordinator, scheduleController.getScheduleUploads);
@@ -62,7 +52,7 @@ router.put('/:id', verifyToken, isCoordinator, validateSchedule, scheduleControl
 router.delete('/:id', verifyToken, isCoordinator, scheduleController.removeSchedule);
 router.get('/', verifyToken, isCoordinator, scheduleController.getAllSchedule);
 
-// Staff actions
+// ===== Staff Routes =====
 router.get('/export/staff/:staffId', verifyToken, isStaff, scheduleController.exportSchedulesByStaff);
 router.get('/staff/:staffId', verifyToken, isStaff, scheduleController.getSchedulesByStaff);
 router.get('/search', verifyToken, scheduleController.searchSchedule);

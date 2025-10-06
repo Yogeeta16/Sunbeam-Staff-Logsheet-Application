@@ -29,40 +29,32 @@ exports.getModule = async (req, res) => {
 
 // 🔹 Create Module with Cloudinary
 exports.createModule = async (req, res) => {
-    try {
-        const course_id = req.body.course_id ? parseInt(req.body.course_id, 10) : null;
-        const module_name = req.body.module_name;
+  try {
+    const course_id = req.body.course_id ? parseInt(req.body.course_id, 10) : null;
+    const module_name = req.body.module_name;
 
-        if (!course_id || !module_name) {
-            return res.status(400).json({ message: "course_id and module_name are required" });
-        }
-
-        let curriculum_file_url = null;
-
-        // 🔹 Upload file to Cloudinary if provided
-        if (req.file) {
-            const uploadRes = await cloudinary.uploader.upload(req.file.path, {
-                folder: "modules",
-                resource_type: "raw" // any file type
-            });
-            curriculum_file_url = uploadRes.secure_url;
-        }
-
-        const insertId = await Module.createModule(course_id, module_name, curriculum_file_url);
-
-        // 🔥 Increment modules_count in courses
-        await Course.incrementModules(course_id);
-
-        res.status(201).json({
-            message: "Module created successfully",
-            module_id: insertId,
-            curriculum_file: curriculum_file_url
-        });
-    } catch (error) {
-        console.error("Error creating module:", error);
-        res.status(500).json({ message: error.sqlMessage || error.message });
+    if (!course_id || !module_name) {
+      return res.status(400).json({ message: "course_id and module_name are required" });
     }
+
+    // 🔹 Use URL from multer-storage-cloudinary
+    let curriculum_file_url = req.file?.path || null;
+
+    const insertId = await Module.createModule(course_id, module_name, curriculum_file_url);
+
+    await Course.incrementModules(course_id);
+
+    res.status(201).json({
+      message: "Module created successfully",
+      module_id: insertId,
+      curriculum_file: curriculum_file_url
+    });
+  } catch (error) {
+    console.error("Error creating module:", error);
+    res.status(500).json({ message: error.sqlMessage || error.message });
+  }
 };
+
 
 // 🔹 Delete Module
 exports.deleteModule = async (req, res) => {
@@ -94,15 +86,8 @@ exports.updateModule = async (req, res) => {
 
     const oldCourseId = module.course_id;
 
-    // 🔹 Upload new file to Cloudinary if provided
-    let curriculum_file_url = module.curriculum_file_path; // existing URL
-    if (req.file) {
-        const uploadRes = await cloudinary.uploader.upload(req.file.path, {
-            folder: "modules",
-            resource_type: "raw"
-        });
-        curriculum_file_url = uploadRes.secure_url;
-    }
+    // 🔹 Use multer-cloudinary uploaded URL
+    let curriculum_file_url = req.file?.path || module.curriculum_file_path;
 
     const affectedRows = await Module.updateModule(
       id,
@@ -124,3 +109,4 @@ exports.updateModule = async (req, res) => {
     res.status(500).json({ message: error.sqlMessage || error.message });
   }
 };
+
