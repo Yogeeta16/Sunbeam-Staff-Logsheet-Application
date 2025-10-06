@@ -20,15 +20,25 @@ export const ModuleForm = ({ formData, setFormData, onSubmit, courses, loading }
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.module_name || !formData.course_id) {
-      toast({ title: 'Error', description: 'Module name and course are required.' });
-      return;
-    }
+  e.preventDefault();
+  
+  if (!formData.module_name || !formData.course_id) {
+    toast({ title: 'Error', description: 'Module name and course are required.' });
+    return;
+  }
 
-    const fileToSend = file || existingFilePath;
-    onSubmit({ ...formData, course_id: formData.course_id.toString() }, fileToSend);
-  };
+  const formPayload = new FormData();
+  formPayload.append('module_name', formData.module_name);
+  formPayload.append('course_id', formData.course_id.toString());
+
+  // Only append file if a new file is selected
+  if (file) {
+    formPayload.append('curriculum_file', file);
+  }
+
+  onSubmit(formPayload);
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
