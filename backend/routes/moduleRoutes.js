@@ -16,10 +16,10 @@ router.post(
   '/',
   verifyToken,
   isCoordinator,
-  upload.single('curriculum_file'), // 🔹 must match form-data key
+  upload.single('curriculum_file_path'), // 🔹 must match form-data key
   moduleController.createModule
 );
-router.put('/:id', verifyToken, isCoordinator, upload.single('curriculum_file'), moduleController.updateModule);
+router.put('/:id', verifyToken, isCoordinator, upload.single('curriculum_file_path'), moduleController.updateModule);
 router.delete('/:id', verifyToken, isCoordinator, moduleController.deleteModule);
 
 module.exports = router;
