@@ -2,6 +2,7 @@
 const { validationResult } = require('express-validator');
 const xlsx = require('xlsx');
 const path = require('path');
+const { cloudinary } = require('../cloudinary');
 const db = require('../config/db');  
 const Schedule = require('../models/Schedule');
 const Uploads = require('../models/ScheduleUpload');
@@ -100,28 +101,33 @@ exports.exportSchedules = async (req, res) => {
 
 exports.uploadScheduleExcel = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
     const uploadedBy = req.user.id;
 
-    //  1. Save file info in schedule_uploads
+    // 1️ Upload file to Cloudinary
+    const cloudRes = await cloudinary.uploader.upload(req.file.path, {
+      folder: "schedules",
+      resource_type: "raw" // for Excel files
+    });
+
+    const fileUrl = cloudRes.secure_url; // Cloudinary file URL
+
+    // 2️ Save URL in schedule_uploads table
     await db.query(
       "INSERT INTO schedule_uploads (file_path, uploaded_by) VALUES (?, ?)",
-      [req.file.path, uploadedBy]
+      [fileUrl, uploadedBy]
     );
 
-    //  2. Read Excel
+    // 3️ Read Excel from local path (still needed temporarily)
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(req.file.path);
-    const sheet = workbook.worksheets[0]; 
+    const sheet = workbook.worksheets[0];
 
-    //  3. Loop through rows (skip header row)
+    // 4️ Loop through rows to insert into schedules table
     const schedules = [];
     sheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; 
-
+      if (rowNumber === 1) return; // skip header
       const [
         course_id,
         module_id,
@@ -132,16 +138,16 @@ exports.uploadScheduleExcel = async (req, res) => {
         classgroup,
         venue,
         faculty_id
-      ] = row.values.slice(1); 
+      ] = row.values.slice(1);
 
-      if (!course_id || !module_id) return; 
+      if (!course_id || !module_id) return;
 
       schedules.push([
         course_id,
         module_id,
-      parseExcelDate(date),       
-    parseExcelTime(start_time),  
-    parseExcelTime(end_time), 
+        parseExcelDate(date),
+        parseExcelTime(start_time),
+        parseExcelTime(end_time),
         type,
         classgroup,
         venue,
@@ -159,7 +165,8 @@ exports.uploadScheduleExcel = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "File uploaded and schedules added successfully",
+      message: "File uploaded to Cloudinary and schedules added successfully",
+      fileUrl,
       totalInserted: schedules.length
     });
   } catch (err) {
