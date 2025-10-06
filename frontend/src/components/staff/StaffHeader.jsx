@@ -21,12 +21,12 @@ export const StaffHeader = ({ isCoordinator, onAdd, searchTerm, setSearchTerm })
             className="pl-10"
           />
         </div>
-        {isCoordinator && (
+        {/* {isCoordinator && (
           <Button onClick={onAdd} className="bg-gradient-primary hover:opacity-90">
             <Plus className="w-4 h-4 mr-2" />
             Add Staff
           </Button>
-        )}
+        )} */}
       </div>
     </div>
   );

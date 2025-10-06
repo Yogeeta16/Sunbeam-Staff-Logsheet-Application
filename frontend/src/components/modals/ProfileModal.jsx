@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { updateStaff, updatePassword } from "../../api/staff";
 import { ProfileForm } from "../forms/ProfileForm";
 
-const ProfileModal = ({ isOpen, onClose, mode, user }) => {
+const ProfileModal = ({ isOpen, onClose, mode, user,onSave }) => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -25,37 +25,48 @@ const ProfileModal = ({ isOpen, onClose, mode, user }) => {
     }
   }, [mode, user]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      if (mode === "editProfile") {
-        await updateStaff(user.staff_id, {
-          name: formData.name,
-          email: formData.email,
-          username: formData.username,
-          role: formData.role,
-          phone_number: formData.phone,
-          department: formData.department,
-          office_location: formData.location,
-          joined_date: formData.joined_date,
-        });
-        alert("Profile updated successfully!");
-      } else if (mode === "changePassword") {
-        if (formData.newPassword !== formData.confirmPassword) {
-          alert("New password and confirm password do not match");
-          return;
-        }
-        await updatePassword(user.staff_id, formData.currentPassword, formData.newPassword);
-        alert("Password updated successfully!");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    setLoading(true);
+
+    if (mode === "editProfile") {
+      // Construct updated profile object from formData
+      const updatedProfile = {
+        staff_id: user.staff_id, // keep the ID
+        name: formData.name,
+        email: formData.email,
+        username: formData.username,
+        role: formData.role,
+        phone_number: formData.phone,
+        department: formData.department,
+        office_location: formData.location,
+        joined_date: formData.joined_date,
+      };
+
+      // Call backend API
+      await updateStaff(user.staff_id, updatedProfile);
+      alert("Profile updated successfully!");
+
+      // Update parent component state immediately
+      if (onSave) onSave(updatedProfile);
+
+    } else if (mode === "changePassword") {
+      if (formData.newPassword !== formData.confirmPassword) {
+        alert("New password and confirm password do not match");
+        return;
       }
-      onClose();
-    } catch (error) {
-      alert("Error: " + (error.response?.data?.message || error.message));
-    } finally {
-      setLoading(false);
+      await updatePassword(user.staff_id, formData.currentPassword, formData.newPassword);
+      alert("Password updated successfully!");
     }
-  };
+
+    onClose();
+  } catch (error) {
+    alert("Error: " + (error.response?.data?.message || error.message));
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
