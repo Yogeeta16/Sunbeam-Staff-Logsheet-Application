@@ -2,7 +2,7 @@ import axios from "axios";
 
 // API base URLs
 const API_BASE_URL = "https://sunbeam-staff-logsheet-application-backend-production.up.railway.app/api";
-export const API_DOWNLOAD_URL = "https://sunbeam-staff-logsheet-application-backend-production.up.railway.app";
+// export const API_DOWNLOAD_URL = "https://sunbeam-staff-logsheet-application-backend-production.up.railway.app";
 
 // Axios instance for API calls
 export const api = axios.create({
