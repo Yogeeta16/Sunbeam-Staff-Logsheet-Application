@@ -15,6 +15,7 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 app.use(cors());
 app.use(express.json());
+app.disable('etag');
 
 // Test Route
 app.get('/', (req, res) => {
