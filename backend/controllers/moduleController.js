@@ -4,6 +4,9 @@ const { cloudinary } = require('../cloudinary'); // ⬅️ Cloudinary setup
 
 exports.listModules = async (req, res) => {
     try {
+      res.set('Cache-Control', 'no-store');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
         const modules = await Module.getAllModules();
         res.json(modules);
     } catch (error) {
