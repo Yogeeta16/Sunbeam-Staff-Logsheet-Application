@@ -99,6 +99,7 @@ const Logsheets = () => {
         logsheet={selectedLogsheet}
         user={user}
         viewOnly={viewOnly || isCoordinator}
+        onSave={fetchLogsheets}
       />
     </div>
   );
