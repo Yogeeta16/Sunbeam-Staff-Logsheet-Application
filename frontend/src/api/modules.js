@@ -31,7 +31,7 @@ export const createModule = async (moduleData, file) => {
     const formData = new FormData();
     formData.append("course_id", moduleData.course_id);
     formData.append("module_name", moduleData.module_name);
-    if (file) formData.append("curriculum_file", file);
+    if (file) formData.append("curriculum_file_path", file);
 
     const res = await api.post("/modules", formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -49,7 +49,7 @@ export const updateModule = async (id, moduleData, file) => {
     const formData = new FormData();
     formData.append("course_id", moduleData.course_id);
     formData.append("module_name", moduleData.module_name);
-    if (file) formData.append("curriculum_file", file);
+    if (file) formData.append("curriculum_file_path", file);
 
     const res = await api.put(`/modules/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
