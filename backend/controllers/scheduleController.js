@@ -7,6 +7,8 @@ const Schedule = require('../models/Schedule');
 const Uploads = require('../models/ScheduleUpload');
 
 // ======= Helpers =======
+
+// Send validation errors
 const sendValidation = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -17,7 +19,7 @@ const sendValidation = (req, res) => {
 };
 
 // Convert Excel date → 'YYYY-MM-DD'
-const parseExcelDate = value => {
+const parseExcelDate = (value) => {
   if (!value) return null;
   if (value instanceof Date) return value.toISOString().split('T')[0];
   if (typeof value === 'number') return new Date(Math.round((value - 25569) * 86400 * 1000)).toISOString().split('T')[0];
@@ -26,7 +28,7 @@ const parseExcelDate = value => {
 };
 
 // Convert Excel time → 'HH:MM:SS'
-const parseExcelTime = value => {
+const parseExcelTime = (value) => {
   if (!value) return null;
   if (value instanceof Date) return value.toTimeString().split(' ')[0];
   if (typeof value === 'number') {
@@ -49,8 +51,8 @@ exports.addSchedule = async (req, res) => {
     const scheduleId = await Schedule.create(req.body);
     res.status(201).json({ message: 'Schedule created', schedule_id: scheduleId });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error creating schedule:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -61,19 +63,23 @@ exports.uploadScheduleExcel = async (req, res) => {
 
     const uploadedBy = req.user.id;
 
-    // Upload file to Cloudinary
-    const cloudRes = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'schedules',
-      resource_type: 'raw'
+    // Upload to Cloudinary
+    const cloudRes = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'schedules', resource_type: 'raw' },
+        (error, result) => (error ? reject(error) : resolve(result))
+      );
+      stream.end(req.file.buffer);
     });
+
     const fileUrl = cloudRes.secure_url;
 
     // Save upload record
     const uploadId = await Uploads.recordUpload({ file_path: fileUrl, uploaded_by: uploadedBy });
 
-    // Read Excel and insert schedules
+    // Read Excel from buffer
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(req.file.path);
+    await workbook.xlsx.load(req.file.buffer);
     const sheet = workbook.worksheets[0];
 
     const schedules = [];
@@ -91,18 +97,18 @@ exports.uploadScheduleExcel = async (req, res) => {
         faculty_id
       ] = row.values.slice(1);
 
-      if (!course_id || !module_id) return;
+      if (!course_id || !module_id || !faculty_id) return;
 
       schedules.push([
-        course_id,
-        module_id,
+        parseInt(course_id, 10),
+        parseInt(module_id, 10),
         parseExcelDate(date),
         parseExcelTime(start_time),
         parseExcelTime(end_time),
-        type,
-        classgroup,
-        venue,
-        faculty_id
+        type || null,
+        classgroup || null,
+        venue || null,
+        parseInt(faculty_id, 10)
       ]);
     });
 
@@ -121,9 +127,10 @@ exports.uploadScheduleExcel = async (req, res) => {
       totalInserted: schedules.length,
       uploadId
     });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Upload failed', details: err.message });
+    console.error('Upload failed:', err);
+    res.status(500).json({ message: 'Something went wrong!', details: err.message });
   }
 };
 
@@ -139,8 +146,8 @@ exports.getScheduleUploads = async (req, res) => {
       uploaded_at: u.uploaded_at
     })));
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching uploads:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -172,9 +179,10 @@ exports.exportSchedules = async (req, res) => {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=schedules.xlsx');
     res.send(buffer);
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error exporting schedules', error: err.message });
+    console.error('Error exporting schedules:', err);
+    res.status(500).json({ message: 'Error exporting schedules', details: err.message });
   }
 };
 
@@ -206,9 +214,10 @@ exports.exportSchedulesByStaff = async (req, res) => {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename=schedules_staff_${staffId}.xlsx`);
     res.send(buffer);
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error exporting schedules', error: err.message });
+    console.error('Error exporting schedules by staff:', err);
+    res.status(500).json({ message: 'Error exporting schedules', details: err.message });
   }
 };
 
@@ -218,8 +227,8 @@ exports.getAllSchedule = async (req, res) => {
     const rows = await Schedule.getAll();
     res.json(rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching schedules:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -227,11 +236,11 @@ exports.getAllSchedule = async (req, res) => {
 exports.getOneSchedule = async (req, res) => {
   try {
     const row = await Schedule.getById(req.params.id);
-    if (!row) return res.status(404).json({ message: 'Not found' });
+    if (!row) return res.status(404).json({ message: 'Schedule not found' });
     res.json(row);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching schedule:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -240,11 +249,11 @@ exports.updateSchedule = async (req, res) => {
   if (sendValidation(req, res)) return;
   try {
     const affected = await Schedule.update(req.params.id, req.body);
-    if (!affected) return res.status(404).json({ message: 'Not found' });
+    if (!affected) return res.status(404).json({ message: 'Schedule not found' });
     res.json({ message: 'Schedule updated' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error updating schedule:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -252,11 +261,11 @@ exports.updateSchedule = async (req, res) => {
 exports.removeSchedule = async (req, res) => {
   try {
     const affected = await Schedule.remove(req.params.id);
-    if (!affected) return res.status(404).json({ message: 'Not found' });
+    if (!affected) return res.status(404).json({ message: 'Schedule not found' });
     res.json({ message: 'Schedule deleted' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error deleting schedule:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -271,8 +280,8 @@ exports.searchSchedule = async (req, res) => {
     });
     res.json(data);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error searching schedules:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -284,8 +293,8 @@ exports.getSchedulesByStaff = async (req, res) => {
     if (!rows.length) return res.status(404).json({ message: 'No schedules found for this staff' });
     res.json(rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching schedules for staff:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };
 
@@ -297,7 +306,7 @@ exports.getAvailableSchedulesForStaff = async (req, res) => {
     if (!rows.length) return res.status(404).json({ message: 'No available schedules' });
     res.json(rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching available schedules:', err);
+    res.status(500).json({ message: 'Server error', details: err.message });
   }
 };

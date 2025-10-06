@@ -4,35 +4,11 @@ const { body } = require('express-validator');
 const multer = require('multer');
 const scheduleController = require('../controllers/scheduleController');
 const { verifyToken, isCoordinator, isStaff } = require('../middleware/roleMiddleware');
-const { scheduleStorage } = require('../cloudinary'); // Cloudinary storage for schedules
 
-/* ======= OLD LOCAL STORAGE (Commented Out) =======
-const path = require('path');
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(process.cwd(), 'uploads/schedules'));
-  },
-  filename: function (req, file, cb) {
-    const ts = Date.now();
-    const ext = path.extname(file.originalname);
-    cb(null, `schedule_${ts}${ext}`);
-  }
-});
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    const allowed = ['.xlsx', '.xls'];
-    if (!allowed.includes(path.extname(file.originalname).toLowerCase())) {
-      return cb(new Error('Only .xlsx or .xls files allowed'));
-    }
-    cb(null, true);
-  }
-}); */
+// ======= MULTER MEMORY STORAGE (for Excel/PDF/Docs) =======
+const upload = multer({ storage: multer.memoryStorage() });
 
-// ======= CLOUDINARY STORAGE =======
-const upload = multer({ storage: scheduleStorage });
-
-// Validation for schedule creation/updating
+// ====== Validation for schedule creation/updating ======
 const validateSchedule = [
   body('course_id').isInt().withMessage('course_id required'),
   body('module_id').isInt().withMessage('module_id required'),
@@ -45,7 +21,16 @@ const validateSchedule = [
 
 // ===== Coordinator Routes =====
 router.get('/export', verifyToken, isCoordinator, scheduleController.exportSchedules);
-router.post('/upload', verifyToken, isCoordinator, upload.single('file'), scheduleController.uploadScheduleExcel);
+
+// Upload Excel (Memory storage + Cloudinary)
+router.post(
+  '/upload',
+  verifyToken,
+  isCoordinator,
+  upload.single('file'), // key must match form-data
+  scheduleController.uploadScheduleExcel
+);
+
 router.get('/uploads/list', verifyToken, isCoordinator, scheduleController.getScheduleUploads);
 router.post('/', verifyToken, isCoordinator, validateSchedule, scheduleController.addSchedule);
 router.put('/:id', verifyToken, isCoordinator, validateSchedule, scheduleController.updateSchedule);

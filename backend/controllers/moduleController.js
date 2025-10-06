@@ -33,18 +33,24 @@ exports.getModule = async (req, res) => {
 // 🔹 Create Module with Cloudinary
 exports.createModule = async (req, res) => {
   try {
-    const course_id = req.body.course_id ? parseInt(req.body.course_id, 10) : null;
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+
+    const course_id = parseInt(req.body.course_id, 10);
     const module_name = req.body.module_name;
 
     if (!course_id || !module_name) {
       return res.status(400).json({ message: "course_id and module_name are required" });
     }
 
-    // 🔹 Use URL from multer-storage-cloudinary
-    let curriculum_file_url = req.file?.path || null;
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded or wrong form-data key" });
+    }
+
+    const curriculum_file_url = req.file.path; // Cloudinary URL
+    console.log("Curriculum file URL:", curriculum_file_url);
 
     const insertId = await Module.createModule(course_id, module_name, curriculum_file_url);
-
     await Course.incrementModules(course_id);
 
     res.status(201).json({
