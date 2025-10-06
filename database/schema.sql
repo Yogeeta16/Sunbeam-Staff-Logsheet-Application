@@ -11,7 +11,7 @@ USE logsheet_app;
 DROP TABLE IF EXISTS logsheets;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS modules;
-DROP TABLE IF EXISTS schedule_uploads
+DROP TABLE IF EXISTS schedule_uploads;
 DROP TABLE IF EXISTS staff;
 DROP TABLE IF EXISTS courses;
 
