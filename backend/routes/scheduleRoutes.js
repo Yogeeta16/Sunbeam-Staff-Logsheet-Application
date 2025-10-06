@@ -1,13 +1,14 @@
-// scheduleRoutes.js
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const multer = require('multer');
-const path = require('path');
-
 const scheduleController = require('../controllers/scheduleController');
 const { verifyToken, isCoordinator, isStaff } = require('../middleware/roleMiddleware');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { cloudinary } = require('../cloudinary'); // make sure cloudinary.js is configured
 
+/* ======= OLD LOCAL STORAGE (Commented Out) =======
+const path = require('path');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(process.cwd(), 'uploads/schedules'));
@@ -18,7 +19,6 @@ const storage = multer.diskStorage({
     cb(null, `schedule_${ts}${ext}`);
   }
 });
-
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
@@ -28,8 +28,20 @@ const upload = multer({
     }
     cb(null, true);
   }
+}); */
+
+// ======= CLOUDINARY STORAGE =======
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'schedules',
+    allowed_formats: ['xlsx', 'xls'],
+  },
 });
 
+const upload = multer({ storage });
+
+// ======= Validation =======
 const validateSchedule = [
   body('course_id').isInt().withMessage('course_id required'),
   body('module_id').isInt().withMessage('module_id required'),
@@ -40,20 +52,21 @@ const validateSchedule = [
   body('faculty_id').isInt().withMessage('faculty_id required')
 ];
 
-// Only Coordinator can Upload , export , create , update , delete
+// ======= ROUTES =======
+// Coordinator actions
 router.get('/export', verifyToken, isCoordinator, scheduleController.exportSchedules);
 router.post('/upload', verifyToken, isCoordinator, upload.single('file'), scheduleController.uploadScheduleExcel);
 router.get('/uploads/list', verifyToken, isCoordinator, scheduleController.getScheduleUploads);
 router.post('/', verifyToken, isCoordinator, validateSchedule, scheduleController.addSchedule);
-router.put('/:id', verifyToken, isCoordinator,validateSchedule, scheduleController.updateSchedule);
+router.put('/:id', verifyToken, isCoordinator, validateSchedule, scheduleController.updateSchedule);
 router.delete('/:id', verifyToken, isCoordinator, scheduleController.removeSchedule);
-router.get('/', verifyToken, isCoordinator,scheduleController.getAllSchedule);
+router.get('/', verifyToken, isCoordinator, scheduleController.getAllSchedule);
 
-// Staff can view
+// Staff actions
 router.get('/export/staff/:staffId', verifyToken, isStaff, scheduleController.exportSchedulesByStaff);
-router.get('/staff/:staffId', verifyToken, isStaff,scheduleController.getSchedulesByStaff);
+router.get('/staff/:staffId', verifyToken, isStaff, scheduleController.getSchedulesByStaff);
 router.get('/search', verifyToken, scheduleController.searchSchedule);
 router.get('/:id', verifyToken, scheduleController.getOneSchedule);
-router.get('/staff/:staffId/available',verifyToken, isStaff, scheduleController.getAvailableSchedulesForStaff);
+router.get('/staff/:staffId/available', verifyToken, isStaff, scheduleController.getAvailableSchedulesForStaff);
 
 module.exports = router;
