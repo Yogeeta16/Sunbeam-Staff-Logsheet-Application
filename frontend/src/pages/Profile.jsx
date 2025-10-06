@@ -63,7 +63,9 @@ const Profile = () => {
         onClose={() => setModalOpen(false)}
         mode={modalMode}
         user={profile}
+        onSave={(updatedProfile) => setProfile(prev => ({ ...prev, ...updatedProfile }))}
       />
+
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { getSchedulesByStaff } from "../../api/schedules";
 import { createLogsheet, updateLogsheet, updateLogsheetStatus, getLogsheets } from "../../api/logsheets";
 
 
-export const LogsheetsModal = ({ isOpen, onClose, logsheet, user, viewOnly = false }) => {
+export const LogsheetsModal = ({ isOpen, onClose, logsheet, user, viewOnly = false, onSave }) => {
   const { toast } = useToast();
   const isCoordinator = user?.role?.toLowerCase() === "coordinator";
 
@@ -112,39 +112,47 @@ export const LogsheetsModal = ({ isOpen, onClose, logsheet, user, viewOnly = fal
     }
   }, [formData.scheduleId, schedules]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (viewOnly) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (viewOnly) return;
 
-    const payload = {
-      faculty_id: user.id,
-      course_id: formData.courseId ? Number(formData.courseId) : null,
-      module_id: formData.moduleId ? Number(formData.moduleId) : null,
-      schedule_id: formData.scheduleId ? Number(formData.scheduleId) : null,
-      date: formData.date,
-      type: formData.type,
-      start_time: formData.start_time,
-      end_time: formData.end_time,
-      topics_taught: formData.topics_taught,
-      assignment_given: formData.assignment_given,
-      student_progress: formData.student_progress,
-      status: formData.status || "Pending",
-    };
-
-    try {
-      if (isCoordinator && logsheet) {
-        await updateLogsheetStatus(logsheet.logsheet_id, formData.status);
-      } else if (logsheet) {
-        await updateLogsheet(logsheet.logsheet_id, payload);
-      } else {
-        await createLogsheet(payload);
-      }
-      toast({ title: "Saved successfully" });
-      onClose();
-    } catch {
-      toast({ title: "Save failed", variant: "destructive" });
-    }
+  const payload = {
+    faculty_id: user.id,
+    course_id: formData.courseId ? Number(formData.courseId) : null,
+    module_id: formData.moduleId ? Number(formData.moduleId) : null,
+    schedule_id: formData.scheduleId ? Number(formData.scheduleId) : null,
+    date: formData.date,
+    type: formData.type,
+    start_time: formData.start_time,
+    end_time: formData.end_time,
+    topics_taught: formData.topics_taught,
+    assignment_given: formData.assignment_given,
+    student_progress: formData.student_progress,
+    status: formData.status || "Pending",
   };
+
+  try {
+    let savedLogsheet;
+
+    if (isCoordinator && logsheet) {
+      savedLogsheet = await updateLogsheetStatus(logsheet.logsheet_id, formData.status);
+    } else if (logsheet) {
+      savedLogsheet = await updateLogsheet(logsheet.logsheet_id, payload);
+    } else {
+      savedLogsheet = await createLogsheet(payload);
+    }
+
+    toast({ title: "Saved successfully" });
+
+    // Notify parent to update table instantly
+    if (onSave) onSave(savedLogsheet);
+
+    onClose();
+  } catch {
+    toast({ title: "Save failed", variant: "destructive" });
+  }
+};
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
