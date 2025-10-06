@@ -3,16 +3,13 @@ import { api } from "./index";
 // Fetch all modules
 export const getModules = async () => {
   try {
-    const res = await api.get("/modules", {
-      headers: { "Cache-Control": "no-cache" } // bypass browser cache
-    });
+    const res = await api.get("/modules", { headers: { "Cache-Control": "no-cache" } });
     return res.data;
   } catch (error) {
     console.error("Error fetching modules:", error.response?.data || error.message);
     return [];
   }
 };
-
 
 // Fetch module by ID
 export const getModuleById = async (id) => {
@@ -25,14 +22,9 @@ export const getModuleById = async (id) => {
   }
 };
 
-// Create a new module (with optional curriculum file upload)
-export const createModule = async (moduleData, file) => {
+// Create a new module (expects FormData)
+export const createModule = async (formData) => {
   try {
-    const formData = new FormData();
-    formData.append("course_id", moduleData.course_id);
-    formData.append("module_name", moduleData.module_name);
-    if (file) formData.append("curriculum_file_path", file);
-
     const res = await api.post("/modules", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -43,14 +35,9 @@ export const createModule = async (moduleData, file) => {
   }
 };
 
-// Update an existing module (with optional curriculum file upload)
-export const updateModule = async (id, moduleData, file) => {
+// Update an existing module (expects FormData)
+export const updateModule = async (id, formData) => {
   try {
-    const formData = new FormData();
-    formData.append("course_id", moduleData.course_id);
-    formData.append("module_name", moduleData.module_name);
-    if (file) formData.append("curriculum_file_path", file);
-
     const res = await api.put(`/modules/${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -69,5 +56,21 @@ export const deleteModule = async (id) => {
   } catch (error) {
     console.error(`Error deleting module ID ${id}:`, error.response?.data || error.message);
     throw error;
+  }
+};
+
+// Download or open a file
+export const downloadOption = (fileUrl, openInNewTab = false) => {
+  if (!fileUrl) return;
+
+  if (openInNewTab) {
+    window.open(fileUrl, "_blank");
+  } else {
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileUrl.split("/").pop();
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 };
