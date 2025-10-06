@@ -3,13 +3,16 @@ import { api } from "./index";
 // Fetch all modules
 export const getModules = async () => {
   try {
-    const res = await api.get("/modules");
+    const res = await api.get("/modules", {
+      headers: { "Cache-Control": "no-cache" } // bypass browser cache
+    });
     return res.data;
   } catch (error) {
     console.error("Error fetching modules:", error.response?.data || error.message);
     return [];
   }
 };
+
 
 // Fetch module by ID
 export const getModuleById = async (id) => {
