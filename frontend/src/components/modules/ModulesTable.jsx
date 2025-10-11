@@ -18,6 +18,7 @@ export const ModulesTable = ({ modules, isCoordinator, onEdit, onDelete, onDownl
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Module ID</TableHead>
             <TableHead>Module</TableHead>
             <TableHead>Course</TableHead>
             <TableHead>Curriculum</TableHead>
@@ -27,7 +28,8 @@ export const ModulesTable = ({ modules, isCoordinator, onEdit, onDelete, onDownl
         <TableBody>
           {modules.map((module) => (
             <TableRow key={module.module_id}>
-              <TableCell>{module.module_name}</TableCell>
+              <TableCell>{module.module_id}</TableCell>
+               <TableCell>{module.module_name}</TableCell>
               <TableCell>
                 <Badge variant="outline">{module.course_name}</Badge>
               </TableCell>

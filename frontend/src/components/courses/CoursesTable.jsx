@@ -38,6 +38,7 @@ export const CoursesTable = ({
         <Table>
           <TableHeader>
             <TableRow>
+               <TableHead>Course ID</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Coordinator</TableHead>
               <TableHead>Modules</TableHead>
@@ -48,6 +49,7 @@ export const CoursesTable = ({
           <TableBody>
             {filteredCourses.map((course) => (
               <TableRow key={course.course_id}>
+                <TableCell className="font-medium">{course.course_id}</TableCell>
                 <TableCell className="font-medium">{course.course_name}</TableCell>
                 <TableCell>{course.coordinator_name}</TableCell>
                 <TableCell>{course.modules_count}</TableCell>
