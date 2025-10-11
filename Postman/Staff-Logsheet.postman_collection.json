@@ -1,0 +1,977 @@
+{
+	"info": {
+		"_postman_id": "a9223f00-da5a-49aa-8e97-cb8a08c08e5e",
+		"name": "Staff-Logsheet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47488800",
+		"_collection_link": "https://bodadeyogeeta2001-3677355.postman.co/workspace/Yogeeta-bodade's-Workspace~6162d737-5e86-4f24-83fd-827fad2b7fc1/collection/47488800-a9223f00-da5a-49aa-8e97-cb8a08c08e5e?action=share&source=collection_link&creator=47488800"
+	},
+	"item": [
+		{
+			"name": "Staff",
+			"item": [
+				{
+					"name": "Delete User (Coordinator only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/auth/users/4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Yogita\",\n  \"email\": \"yogita@example.com\",\n  \"username\": \"yogeeta\",\n  \"role\": \"Staff\",\n  \"phone_number\": \"1234567890\",\n  \"department\": \"IT\",\n  \"office_location\": \"Mumbai\",\n  \"joined_date\": \"2025-01-01\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/users/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users (Coordinator only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/auth/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/auth/users/4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Modules",
+			"item": [
+				{
+					"name": "Get All Modules",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/modules",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"modules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Module by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/modules/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"modules",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Module (Coordinator only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "course_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "module_name",
+									"value": "OOP Basics",
+									"type": "text"
+								},
+								{
+									"key": "curriculum_file",
+									"type": "file",
+									"src": "/home/ics/Desktop/DSA BASIC 1.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/modules",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"modules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Module (Coordinator only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "course_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "module_name",
+									"value": "OOP Advanced",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/modules/31",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"modules",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Module (Coordinator only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/modules/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"modules",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Schedules",
+			"item": [
+				{
+					"name": "Search Schedules",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/schedules/search?faculty_id=1&course_id=1&module_id=1&date=2025-10-10",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"schedules",
+								"search"
+							],
+							"query": [
+								{
+									"key": "faculty_id",
+									"value": "1"
+								},
+								{
+									"key": "course_id",
+									"value": "1"
+								},
+								{
+									"key": "module_id",
+									"value": "1"
+								},
+								{
+									"key": "date",
+									"value": "2025-10-10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Schedules by Staff (Staff only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/schedules/staff/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"schedules",
+								"staff",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Export Schedules (Coordinator only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/schedules/export",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"schedules",
+								"export"
+							],
+							"query": [
+								{
+									"key": "Autho",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Excel (Coordinator only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/ics/Downloads/schedules (3).xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/schedules/upload",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"schedules",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Schedule (Coordinator only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"course_id\": 1,\n  \"module_id\": 2,\n  \"date\": \"2025-10-10\",\n  \"start_time\": \"10:00:00\",\n  \"end_time\": \"12:00:00\",\n  \"type\": \"Lecture\",\n  \"classgroup\": \"A1\",\n  \"venue\": \"Room 101\",\n  \"faculty_id\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/schedules",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get All Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/courses",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/courses/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"courses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course (Coordinator only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"course_name\": \"Java Programming\",\n  \"coordinator_id\": 1,\n  \"status\": \"Active\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/courses",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course (Coordinator only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"course_name\": \"Advanced Java\",\n  \"coordinator_id\": 1,\n  \"status\": \"Active\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/courses/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"courses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course (Coordinator only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/courses/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"courses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logsheets",
+			"item": [
+				{
+					"name": "Approve/Reject Log (Coordinator only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"Approved\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/logsheets/7/status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets",
+								"7",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Log (Staff only, Pending)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/logsheets/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Log (Staff only, Pending)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"schedule_id\": 19,\n  \"course_id\": 1,\n  \"module_id\": 2,\n  \"date\": \"2025-10-01\",\n  \"start_time\": \"14:00:00\",\n  \"end_time\": \"19:30:00\",\n  \"type\": \"Lab\",\n  \"status\": \"Pending\",\n  \"topics_taught\": \"Process Synchronization using Semaphores\",\n  \"assignment_given\": \"Implement the Producer-Consumer problem using semaphores\",\n  \"student_progress\": \"Students understood concepts well after debugging session\",\n  \"faculty_id\": 3\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/logsheets/7",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Log (Staff only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"schedule_id\": 19,\n  \"course_id\": 1,\n  \"module_id\": 2,\n  \"date\": \"2025-10-01\",\n  \"start_time\": \"17:00:00\",\n  \"end_time\": \"19:30:00\",\n  \"type\": \"Lab\",\n  \"status\": \"Pending\",\n  \"topics_taught\": \"Process Synchronization using Semaphores\",\n  \"assignment_given\": \"Implement the Producer-Consumer problem using semaphores\",\n  \"student_progress\": \"Students understood concepts well after debugging session\",\n  \"faculty_id\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/logsheets",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Log by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/logsheets/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Logs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/logsheets",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"logsheets"
+							]
+						},
+						"description": "token for staff - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6IlN0YWZmIiwiaWF0IjoxNzU5NzcxNTU4LCJleHAiOjE3NTk4NTc5NTh9.BDNTKHB7D4ohXT0isS9TZA1V-yRcorX64EM-YmuMsfw\n\ntoken for cordinator - eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkNvb3JkaW5hdG9yIiwiaWF0IjoxNzU5NzcxNDc3LCJleHAiOjE3NTk4NTc4Nzd9.Tzi0ptsv-ToRiu9s-ruJOBKDkEI4RXzdUJsGaenuWD8"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Coordinator\",\n  \"email\": \"coordinator@example.com\",\n  \"username\": \"Coordinator\",\n  \"password\": \"1234\",\n  \"role\": \"Coordinator\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/signup",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"NewTest@1234\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"oldPassword\": \"Test@1234\",\n  \"newPassword\": \"NewTest@1234\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/users/4/password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"4",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Coordinator Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/dashboard/coordinator",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dashboard",
+								"coordinator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Staff Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/dashboard/staff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"dashboard",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
